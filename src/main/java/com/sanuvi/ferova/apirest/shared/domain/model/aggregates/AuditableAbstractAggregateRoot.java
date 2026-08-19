@@ -29,6 +29,10 @@ public class AuditableAbstractAggregateRoot<T extends AbstractAggregateRoot<T>> 
     @LastModifiedDate
     private LocalDate updateAt;
 
+    /**
+     * Registra un evento de dominio en el aggregate root.
+     * @param event
+     */
     public void addDomainEvent(Object event) {
         registerEvent(event);
     }
