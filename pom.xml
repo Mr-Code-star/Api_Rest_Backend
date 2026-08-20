@@ -67,6 +67,79 @@
             <version>2.8.13</version>
         </dependency>
 
+        <!--
+    Spring Security Starter
+    Proporciona funcionalidades de seguridad y autenticación para la aplicación.
+
+    Características principales:
+    - Autenticación y autorización de usuarios
+    - Protección contra ataques CSRF
+    - Integración con JWT para autenticación stateless
+    - Encriptación de contraseñas con BCrypt
+    - Seguridad a nivel de métodos y endpoints
+    - Filtros de seguridad personalizables
+    - Soporte para autenticación basada en roles y permisos
+    -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- JJWT API
+            API principal para generar y validar tokens JWT.
+            Características principales:
+            - Creación de tokens JWT firmados
+            - Validación y parseo de tokens
+            - Soporte para estándar JWT (RFC 7519)
+            - Extracción de claims y datos del token
+            - Configuración de expiración, emisor y audiencia
+            - Soporte para diferentes algoritmos de firma
+        -->
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+
+            <!--
+        JJWT Implementation
+        Implementación concreta de la API de JJWT.
+
+        Características principales:
+        - Implementación de los algoritmos de firma
+        - Parsing y validación de tokens
+        - Gestión de claims y payload
+        - Manejo de fechas y tiempos de expiración
+        - Decodificación de tokens
+        -->
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+    JJWT Jackson
+    Adaptador de Jackson para JJWT (serialización/deserialización).
+
+    Características principales:
+    - Serialización de objetos a JSON
+    - Deserialización de JSON a objetos
+    - Manejo de claims complejos
+    - Soporte para objetos anidados en claims
+    - Integración con el ecosistema Jackson
+    -->
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
