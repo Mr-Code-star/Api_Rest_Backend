@@ -1,6 +1,7 @@
 package com.sanuvi.ferova.apirest.iam.domain.model.aggregate;
 
-import com.sanuvi.ferova.apirest.iam.domain.model.enumeration.Role;
+import com.sanuvi.ferova.apirest.iam.domain.model.entities.Role;
+import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.Roles;
 import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.Dni;
 import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.Email;
 import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.Password;
@@ -8,11 +9,11 @@ import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.Phone;
 import com.sanuvi.ferova.apirest.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashMap;
@@ -35,6 +36,7 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     @Setter
     private Password password;
 
+    @DBRef
     private Role role;
 
     @Indexed(unique = true)  // MongoDB: índice único
@@ -60,9 +62,6 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         this.email = email;
         this.phone = phone;
     }
-
-    // Metodos Get
-
 
 
     // Validaciones Privadas
@@ -102,7 +101,7 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         primitives.put("name", this.name);
         primitives.put("lastname", this.lastName);
         primitives.put("password", this.password != null ? this.password.value() : null);
-        primitives.put("role", this.role != null ? this.role.name() : null);
+        primitives.put("role", this.role != null ? this.role.getStringName() : null);
         primitives.put("dni", this.dni != null ? this.dni.value() : null);
         primitives.put("email", this.email != null ? this.email.value() : null);
         primitives.put("phone", this.phone != null ? this.phone.value() : null);
