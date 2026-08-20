@@ -1,5 +1,9 @@
 package com.sanuvi.ferova.apirest.iam.domain.model.commands;
 
+import com.sanuvi.ferova.apirest.iam.domain.model.entities.Role;
+
+import java.util.List;
+
 public record CreateStaffUserCommand(
         String name,
         String lastName,
@@ -7,5 +11,5 @@ public record CreateStaffUserCommand(
         String email,
         String phone,
         String password,
-        String roleName
+        List<Role> roles
 ) { }
