@@ -1,7 +1,6 @@
 package com.sanuvi.ferova.apirest.iam.infrastructure.persistence.mongodb;
 
 import com.sanuvi.ferova.apirest.iam.domain.model.aggregate.User;
-import com.sanuvi.ferova.apirest.iam.domain.model.enumeration.Role;
 import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.*;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -46,14 +45,6 @@ public interface UserRepository extends MongoRepository<User, String> {
      * @return un {@link Optional} que contiene el usuario encontrado, o vacío si no existe
      */
     Optional<User> findByPhone(Phone phone);
-
-    /**
-     * Busca usuarios por su rol
-     *
-     * @param role el rol del usuario
-     * @return una {@link List} de usuarios con el rol especificado
-     */
-    List<User> findByRole(Role role);
 
     /**
      * Verifica si existe un usuario con el DNI especificado
@@ -200,7 +191,7 @@ public interface UserRepository extends MongoRepository<User, String> {
      * @param role el rol a contar
      * @return el número de usuarios con el rol especificado
      */
-    long countByRole(Role role);
+    long countByRole(Roles role);
 
     /**
      * Verifica si existe un usuario por email (para reset de contraseña)
