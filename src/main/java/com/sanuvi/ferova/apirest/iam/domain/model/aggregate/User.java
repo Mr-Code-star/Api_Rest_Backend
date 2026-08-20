@@ -61,6 +61,10 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         this.phone = phone;
     }
 
+    // Metodos Get
+
+
+
     // Validaciones Privadas
 
     private void validateName(String name) {
@@ -105,4 +109,7 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         return primitives;
     }
 
+    public String getFullName() {
+        return this.name + " " + this.lastName;
+    }
 }
