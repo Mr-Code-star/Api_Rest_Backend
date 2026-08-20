@@ -3,7 +3,7 @@ package com.sanuvi.ferova.apirest.iam.domain.model.valueobjects;
 import java.util.regex.Pattern;
 
 public record Dni (String value) {
-    private static final Pattern DNI_PATTERN = Pattern.compile("^\\\\d{8}$");
+    private static final Pattern DNI_PATTERN = Pattern.compile("^\\d{8}$");
 
     public Dni {
 

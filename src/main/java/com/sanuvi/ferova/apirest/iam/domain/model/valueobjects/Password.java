@@ -18,5 +18,11 @@ public record Password(String value) {
                     "Password must contain uppercase, lowercase, number and symbol"
             );
         }
+
+        value = normalize(value);
+    }
+
+    private static String normalize(String phone) {
+        return phone.replaceAll("\\D", "");
     }
 }

@@ -4,15 +4,18 @@ import java.util.regex.Pattern;
 
 public record Email (String value){
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
 
 
     public Email {
         if(value == null || value.isEmpty())
             throw new IllegalArgumentException("Email is required");
 
+        String normalized = value.toLowerCase().trim();
+
         if (!EMAIL_PATTERN.matcher(value).matches())
             throw new IllegalArgumentException("Invalid email format");
 
+        value = normalized;
     }
 }
