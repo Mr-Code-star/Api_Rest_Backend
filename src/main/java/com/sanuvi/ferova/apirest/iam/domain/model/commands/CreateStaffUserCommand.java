@@ -1,7 +1,5 @@
 package com.sanuvi.ferova.apirest.iam.domain.model.commands;
 
-import com.sanuvi.ferova.apirest.iam.domain.model.enumeration.Role;
-
 public record CreateStaffUserCommand(
         String name,
         String lastName,
@@ -9,5 +7,5 @@ public record CreateStaffUserCommand(
         String email,
         String phone,
         String password,
-        Role role
+        String roleName
 ) { }
