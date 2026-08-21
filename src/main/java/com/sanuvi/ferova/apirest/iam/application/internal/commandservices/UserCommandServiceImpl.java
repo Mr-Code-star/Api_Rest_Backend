@@ -10,6 +10,7 @@ import com.sanuvi.ferova.apirest.iam.domain.services.UserCommandService;
 import com.sanuvi.ferova.apirest.iam.infrastructure.email.resend.services.EmailServiceImpl;
 import com.sanuvi.ferova.apirest.iam.infrastructure.persistence.mongodb.RoleRepository;
 import com.sanuvi.ferova.apirest.iam.infrastructure.persistence.mongodb.UserRepository;
+import com.sanuvi.ferova.apirest.shared.domain.exceptions.InvalidCredentialsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -63,12 +64,45 @@ public class UserCommandServiceImpl implements UserCommandService {
 
     @Override
     public Optional<User> handle(RegisterMotherCommand command) {
-        return Optional.empty();
+
+        if(!validateUniqueness(command.dni(), command.email(),command.phone())) {
+            return Optional.empty();
+        }
+
+        Optional<Role> motherRole = roleRepository.findByName(Roles.MOTHER);
+
+        if(motherRole.isEmpty()) {
+            log.error("Rol MOTHER no encontrado en la base de datos");
+            return Optional.empty();
+        }
+
+        var user = new User(
+                command.name(),
+                command.lastName(),
+                new Password(hashingService.encode(command.password())),
+                motherRole.get(),
+                new Dni(command.dni()),
+                new Email(command.email()),
+                new Phone(command.phone())
+                );
+
+        User savedUser = userRepository.save(user);
+
+        return Optional.of(savedUser);
     }
 
     @Override
     public Optional<ImmutablePair<User, String>> handle(LoginUserCommand command) {
-        return Optional.empty();
+        var user = userRepository.findByDni(new Dni(command.dni()));
+        if (user.isEmpty())
+            throw new InvalidCredentialsException("User not found");
+        if (!hashingService.matches(command.password(), user.get().getPassword().value())) {
+            throw new InvalidCredentialsException("Invalid password");
+        }
+
+        // Generamos el Token
+        var token = tokenService.generateToken(user.get().getDni().value());
+        return Optional.of(ImmutablePair.of(user.get(), token));
     }
 
     @Override
