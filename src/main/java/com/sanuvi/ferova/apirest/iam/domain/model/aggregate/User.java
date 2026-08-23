@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +48,14 @@ public class User extends AuditableAbstractAggregateRoot<User> {
 
     @Indexed(unique = true)  // MongoDB: índice único
     private Phone phone;
+
+    // ==== CAMPOS PARA EL RESET DE CONTRASEÑA ====
+
+    @Setter
+    private String resetCode;
+
+    @Setter
+    private LocalDateTime resetCodeExpiry;
 
     // Constructor para creación (sin ID)
     public User(String name, String lastName, Password password,
@@ -95,6 +104,18 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         this.email = newEmail;
     }
 
+    public boolean isResetCodeValid (String code) {
+        if (this.resetCode == null || this.resetCodeExpiry == null)
+            return false;
+
+        return this.resetCode.equals(code) && this.resetCodeExpiry.isAfter(LocalDateTime.now());
+    }
+
+    public void clearResetCode() {
+        this.resetCode = null;
+        this.resetCodeExpiry = null;
+    }
+
     public Map<String, Object> toPrimitives() {
         Map<String, Object> primitives = new HashMap<>();
         primitives.put("id", getId() != null ? getId().toString() : null);
@@ -111,4 +132,5 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     public String getFullName() {
         return this.name + " " + this.lastName;
     }
+    public String getRoleName() { return role != null ? role.getStringName() : null;}
 }
