@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,26 +34,33 @@ public class UserCommandServiceImpl implements UserCommandService {
 
 
     @Override
+    @Transactional
     public Optional<User> handle(CreateStaffUserCommand command) {
 
-        if (!hasValidStaffRole(command.roles())) {
-            log.warn("El usuario debe tener rol NURSE o ADMIN");
+        String roleName = command.roleName();
+
+        if(!"NURSE".equals(roleName) && !"ADMIN".equals(roleName))  {
+            log.warn("Rol de staff inválido: {}", roleName);
             return Optional.empty();
         }
 
-        if (!validateUniqueness(command.dni(), command.email(), command.phone())) {
+        if(!validateUniqueness(command.dni(), command.email(), command.phone()))
+            return Optional.empty();
+
+        // Buscar el rol por nombre
+        var rolesEnum = Roles.valueOf(roleName);
+        var roleOpt = roleRepository.findByName(rolesEnum);
+
+        if (roleOpt.isEmpty()) {
+            log.error("Rol no encontrado: {}", roleName);
             return Optional.empty();
         }
-
-        Role roleToAssign = getStaffRole(command.roles());
-        Role existingRole = roleRepository.findByName(roleToAssign.getName())
-                .orElseThrow(() -> new RuntimeException("Role name not found"));
 
         var user = new User(
                 command.name(),
                 command.lastName(),
                 new Password(hashingService.encode(command.password())),
-                existingRole,
+                roleOpt.get(),
                 new Dni(command.dni()),
                 new Email(command.email()),
                 new Phone(command.phone())
@@ -63,13 +72,14 @@ public class UserCommandServiceImpl implements UserCommandService {
     }
 
     @Override
+    @Transactional
     public Optional<User> handle(RegisterMotherCommand command) {
 
         if(!validateUniqueness(command.dni(), command.email(),command.phone())) {
             return Optional.empty();
         }
 
-        Optional<Role> motherRole = roleRepository.findByName(Roles.MOTHER);
+        var motherRole = roleRepository.findByName(Roles.MOTHER);
 
         if(motherRole.isEmpty()) {
             log.error("Rol MOTHER no encontrado en la base de datos");
@@ -92,6 +102,7 @@ public class UserCommandServiceImpl implements UserCommandService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<ImmutablePair<User, String>> handle(LoginUserCommand command) {
         var user = userRepository.findByDni(new Dni(command.dni()));
         if (user.isEmpty())
@@ -106,18 +117,96 @@ public class UserCommandServiceImpl implements UserCommandService {
     }
 
     @Override
+    @Transactional
     public Optional<Void> handle(RequestResetCodeCommand command) {
-        return Optional.empty();
+        var email = new Email(command.email());
+
+        var userOpt = userRepository.findByEmail(email);
+
+        if(userOpt.isEmpty()) {
+          log.warn("Usuario no encontrado con email: {}", command.email());
+          return Optional.empty();
+        }
+
+        User user = userOpt.get();
+
+        // Generar codigo de 4 digitos (1000-9999)
+        String code = String.valueOf((int) (Math.random() * 9000) + 1000);
+        // Expira en 10 minutos
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
+
+        // Guardar codigo en el usuario
+        user.setResetCode(code);
+        user.setResetCodeExpiry(expiresAt);
+        userRepository.save(user);
+
+        // Enviar email con el codigo
+        emailService.sendResetCode(command.email(), code);
+
+        return Optional.of(null);
     }
 
     @Override
+    @Transactional
     public Optional<Void> handle(VerifyResetCodeCommand command) {
-        return Optional.empty();
+        var email = new Email(command.email());
+        var userOpt = userRepository.findByEmail(email);
+
+        if (userOpt.isEmpty()) {
+            log.warn("Usuario no encontrado con email: {}", command.email());
+            return Optional.empty();
+        }
+
+        User user = userOpt.get();
+
+        if(!user.isResetCodeValid(command.code())){
+            log.warn("Código inválido o expirado para email: {}", command.email());
+            return Optional.empty();
+        }
+
+        log.info("Código verificado exitosamente para: {}", command.email());
+        return Optional.of(null);
+
     }
 
     @Override
+    @Transactional
     public Optional<Void> handle(ResetPasswordCommand command) {
-        return Optional.empty();
+        var verifyCommand = new VerifyResetCodeCommand(
+                command.email(),
+                command.code()
+        );
+
+        Optional<Void> verifyResult = handle(verifyCommand);
+
+        if (verifyResult.isEmpty()) {
+            log.warn("Código inválido para resetear contraseña: {}", command.email());
+            return Optional.empty();
+        }
+
+        var email = new Email(command.email());
+        var userOpt = userRepository.findByEmail(email);
+
+        if (userOpt.isEmpty()) {
+            log.warn("Usuario no encontrado con email: {}", command.email());
+            return Optional.empty();
+        }
+
+        User user = userOpt.get();
+
+        // Hashear la nueva contraseña
+        String hashedPassword = hashingService.encode(command.newPassword());
+        Password newPassword = new Password(hashedPassword);
+
+        // Actualizar la contraseña
+        user.changePassword(newPassword);
+        user.clearResetCode();
+        userRepository.save(user);
+
+        log.info("Contraseña restablecida exitosamente para: {}", command.email());
+        return Optional.of(null);
+
+
     }
 
     // Metodos Auxiliares
