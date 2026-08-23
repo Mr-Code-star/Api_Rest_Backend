@@ -1,3 +1,3 @@
 package com.sanuvi.ferova.apirest.iam.domain.model.queries;
 
-public record GetUserProfileQuery(String userId) {}
+public record GetUserByDniQuery(String Dni) {}

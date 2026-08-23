@@ -49,8 +49,16 @@ public interface UserQueryService {
     /**
      * Maneja la consulta para obtener el perfil de un usuario
      *
-     * @param query el {@link GetUserProfileQuery} con el ID del usuario
+     * @param query el {@link GetUserByDniQuery} con el ID del usuario
      * @return un {@link Optional} que contiene el {@link User} encontrado, o vacío si no existe
      */
-    Optional<User> handle(GetUserProfileQuery query);
+    Optional<User> handle(GetUserByDniQuery query);
+
+    /**
+     * Busca madres por término de búsqueda
+     *
+     * @param query la consulta {@link GetMothersBySearchTermQuery}
+     * @return una lista con las madres que coinciden con el término
+     */
+    List<User> handle(GetMothersBySearchTermQuery query);
 }
