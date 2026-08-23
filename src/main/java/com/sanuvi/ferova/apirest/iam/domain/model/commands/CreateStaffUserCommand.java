@@ -11,5 +11,5 @@ public record CreateStaffUserCommand(
         String email,
         String phone,
         String password,
-        List<Role> roles
+        String roleName
 ) { }
