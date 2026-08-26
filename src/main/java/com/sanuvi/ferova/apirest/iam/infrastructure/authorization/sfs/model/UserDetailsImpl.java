@@ -100,7 +100,7 @@ public class UserDetailsImpl implements UserDetails {
     public static UserDetailsImpl build(User user) {
         // Crear autoridad con el rol del usuario (con prefijo ROLE_)
         GrantedAuthority authority = new SimpleGrantedAuthority(
-                "ROLE_" + user.getRole().name()
+                "ROLE_" + user.getRole().getStringName()
         );
 
         return new UserDetailsImpl(
