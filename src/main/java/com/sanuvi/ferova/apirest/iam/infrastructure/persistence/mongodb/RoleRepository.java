@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RoleRepository extends MongoRepository<Role, Long> {
+public interface RoleRepository extends MongoRepository<Role, String> {
 
     /**
      * Busca un rol por su nombre (enum)

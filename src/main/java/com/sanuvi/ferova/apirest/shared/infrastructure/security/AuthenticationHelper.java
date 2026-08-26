@@ -33,7 +33,7 @@ public class AuthenticationHelper {
      *
      * @return el ID del usuario, o null si no hay usuario autenticado
      */
-    public Long getCurrentUserId() {
+    public String getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {

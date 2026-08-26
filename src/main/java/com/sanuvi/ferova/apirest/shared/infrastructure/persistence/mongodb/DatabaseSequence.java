@@ -27,5 +27,5 @@ public class DatabaseSequence {
     /**
      * Valor actual del contador.
      */
-    private long seq;
+    private String seq;
 }

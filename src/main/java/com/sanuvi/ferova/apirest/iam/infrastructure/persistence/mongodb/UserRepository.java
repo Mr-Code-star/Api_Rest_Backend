@@ -18,7 +18,7 @@ import java.util.Optional;
  *
  */
 @Repository
-public interface UserRepository extends MongoRepository<User, Long> {
+public interface UserRepository extends MongoRepository<User, String> {
 
     // ===== MÉTODOS BÁSICOS =====
 
@@ -138,14 +138,6 @@ public interface UserRepository extends MongoRepository<User, Long> {
     // ===== MÉTODOS PARA RESET DE CONTRASEÑA =====
 
     /**
-     * Busca un usuario por su email para operaciones de reset de contraseña
-     *
-     * @param email el Email del usuario
-     * @return un {@link Optional} que contiene el usuario encontrado, o vacío si no existe
-     */
-    Optional<User> findByEmailForReset(Email email);
-
-    /**
      * Busca usuarios con código de reset válido
      *
      * @param currentTime la hora actual para validar expiración
@@ -193,13 +185,6 @@ public interface UserRepository extends MongoRepository<User, Long> {
      */
     long countByRole(Roles role);
 
-    /**
-     * Verifica si existe un usuario por email (para reset de contraseña)
-     *
-     * @param email el Email a verificar
-     * @return true si existe, false en caso contrario
-     */
-    boolean existsByEmailForReset(Email email);
 
     /**
      * Buscar por id

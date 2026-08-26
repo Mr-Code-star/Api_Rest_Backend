@@ -28,7 +28,7 @@ public class UserDetailsImpl implements UserDetails {
     /**
      * ID del usuario (de MongoDB)
      */
-    private final Long id;
+    private final String id;
 
     /**
      * DNI del usuario (username para Spring Security)
@@ -68,7 +68,7 @@ public class UserDetailsImpl implements UserDetails {
      * @param password contraseña hasheada
      * @param authorities roles del usuario
      */
-    private UserDetailsImpl(Long id, String dni, String fullName, String password,
+    private UserDetailsImpl(String id, String dni, String fullName, String password,
                             Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.dni = dni;

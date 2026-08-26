@@ -26,7 +26,7 @@ import java.util.Set;
 public class Role {
 
     @Id
-    private Long id;
+    private String id;
 
     @Indexed(unique = true)
     private Roles name;

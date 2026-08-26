@@ -51,13 +51,16 @@ public class IamContextFacade {
      * @param roleId role id del usuario
      * @return el ID del usuario creado, o null si falla
      */
-    public Long createStaffUser(String name, String lastName, String dni,
+    public String  createStaffUser(String name, String lastName, String dni,
                                   String email, String phone, String password,
                                   Long roleId) {
 
         var createStaffuserCommand = new CreateStaffUserCommand(name, lastName, dni, email, phone, password, roleId);
         var results = userCommandService.handle(createStaffuserCommand);
-        if (results.isEmpty()) return 0L;
+        if (results.isEmpty()) {
+            log.warn("Facade: No se pudo crear el usuario staff con email: {}", email);
+            return null;
+        }
         return results.get().getId();
     }
 
@@ -72,12 +75,15 @@ public class IamContextFacade {
      * @param password contraseña de la madre
      * @return el ID de la madre creada, o null si falla
      */
-    public Long registerMother(String name, String lastName, String dni,
+    public String  registerMother(String name, String lastName, String dni,
                                  String email, String phone, String password) {
 
         var registerMotherCommand = new RegisterMotherCommand(name, lastName, dni, email, phone, password);
         var results = userCommandService.handle(registerMotherCommand);
-        if (results.isEmpty()) return 0L;
+        if (results.isEmpty()) {
+            log.warn("Facade: No se pudo registrar la madre con email: {}", email);
+            return null;
+        }
         return results.get().getId();
     }
 
@@ -89,7 +95,7 @@ public class IamContextFacade {
      * @param email el email del usuario
      * @return el ID del usuario, o null si no existe
      */
-    public Long getUserIdByEmail(String email) {
+    public String getUserIdByEmail(String email) {
 
             var query = new GetUserByEmailQuery(email);
             var result = userQueryService.handle(query);
@@ -105,7 +111,7 @@ public class IamContextFacade {
      * @param dni el DNI del usuario
      * @return el ID del usuario, o null si no existe
      */
-    public Long getUserIdByDni(String dni) {
+    public String getUserIdByDni(String dni) {
         var query = new GetUserByDniQuery(dni);
         var result = userQueryService.handle(query);
         if (result.isEmpty()) {
