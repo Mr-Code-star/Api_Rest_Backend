@@ -18,7 +18,7 @@ import java.util.Optional;
  *
  */
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
+public interface UserRepository extends MongoRepository<User, Long> {
 
     // ===== MÉTODOS BÁSICOS =====
 
@@ -88,7 +88,7 @@ public interface UserRepository extends MongoRepository<User, String> {
      * @return un {@link Optional} que contiene la madre encontrada, o vacío si no existe
      */
     @Query("{ '_id': ?0, 'role': 'MOTHER' }")
-    Optional<User> findMotherById(String id);
+    Optional<User> findMotherById(Long id);
 
     /**
      * Busca un enfermero por su ID
@@ -97,7 +97,7 @@ public interface UserRepository extends MongoRepository<User, String> {
      * @return un {@link Optional} que contiene el enfermero encontrado, o vacío si no existe
      */
     @Query("{ '_id': ?0, 'role': 'NURSE' }")
-    Optional<User> findNurseById(String id);
+    Optional<User> findNurseById(Long id);
 
     /**
      * Obtiene todos los enfermeros
@@ -200,4 +200,9 @@ public interface UserRepository extends MongoRepository<User, String> {
      * @return true si existe, false en caso contrario
      */
     boolean existsByEmailForReset(Email email);
+
+    /**
+     * Buscar por id
+     */
+    Optional<User> findById(Long id);
 }
