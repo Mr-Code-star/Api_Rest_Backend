@@ -37,30 +37,17 @@ public class UserCommandServiceImpl implements UserCommandService {
     @Transactional
     public Optional<User> handle(CreateStaffUserCommand command) {
 
-        String roleName = command.roleName();
-
-        if(!"NURSE".equals(roleName) && !"ADMIN".equals(roleName))  {
-            log.warn("Rol de staff inválido: {}", roleName);
-            return Optional.empty();
-        }
+        var role = roleRepository.findById(command.roleId())
+                .orElseThrow(() -> new RuntimeException("Role not found"));
 
         if(!validateUniqueness(command.dni(), command.email(), command.phone()))
             return Optional.empty();
-
-        // Buscar el rol por nombre
-        var rolesEnum = Roles.valueOf(roleName);
-        var roleOpt = roleRepository.findByName(rolesEnum);
-
-        if (roleOpt.isEmpty()) {
-            log.error("Rol no encontrado: {}", roleName);
-            return Optional.empty();
-        }
 
         var user = new User(
                 command.name(),
                 command.lastName(),
                 new Password(hashingService.encode(command.password())),
-                roleOpt.get(),
+                role,
                 new Dni(command.dni()),
                 new Email(command.email()),
                 new Phone(command.phone())
