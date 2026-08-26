@@ -1,7 +1,6 @@
 package com.sanuvi.ferova.apirest.iam.domain.model.aggregate;
 
 import com.sanuvi.ferova.apirest.iam.domain.model.entities.Role;
-import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.Roles;
 import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.Dni;
 import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.Email;
 import com.sanuvi.ferova.apirest.iam.domain.model.valueobjects.Password;
@@ -17,8 +16,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+
 
 @Document(collection = "users")
 @Getter
@@ -114,19 +112,6 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     public void clearResetCode() {
         this.resetCode = null;
         this.resetCodeExpiry = null;
-    }
-
-    public Map<String, Object> toPrimitives() {
-        Map<String, Object> primitives = new HashMap<>();
-        primitives.put("id", getId() != null ? getId().toString() : null);
-        primitives.put("name", this.name);
-        primitives.put("lastname", this.lastName);
-        primitives.put("password", this.password != null ? this.password.value() : null);
-        primitives.put("role", this.role != null ? this.role.getStringName() : null);
-        primitives.put("dni", this.dni != null ? this.dni.value() : null);
-        primitives.put("email", this.email != null ? this.email.value() : null);
-        primitives.put("phone", this.phone != null ? this.phone.value() : null);
-        return primitives;
     }
 
     public String getFullName() {
