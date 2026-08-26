@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RoleRepository extends MongoRepository<Role, String> {
+public interface RoleRepository extends MongoRepository<Role, Long> {
 
     /**
      * Busca un rol por su nombre (enum)
@@ -41,4 +41,9 @@ public interface RoleRepository extends MongoRepository<Role, String> {
      * @return Optional con el rol encontrado
      */
     Optional<Role> findByNameIgnoreCase(String name);
+
+    /**
+     * Buscar role por id
+     */
+    Optional<Role> findById(Long id);
 }
