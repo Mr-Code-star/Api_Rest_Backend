@@ -1,9 +1,5 @@
 package com.sanuvi.ferova.apirest.iam.domain.services;
 
-import com.sanuvi.ferova.apirest.iam.domain.model.entities.Role;
-import com.sanuvi.ferova.apirest.iam.domain.model.commands.CreateRoleCommand;
-import com.sanuvi.ferova.apirest.iam.domain.model.commands.UpdateRoleCommand;
-import com.sanuvi.ferova.apirest.iam.domain.model.commands.DeleteRoleCommand;
 import com.sanuvi.ferova.apirest.iam.domain.model.commands.SeedRolesCommand;
 
 import java.util.Optional;
