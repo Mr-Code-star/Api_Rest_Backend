@@ -9,17 +9,9 @@ public record Password(String value) {
     );
 
     public Password {
-        if (value == null) {
+        if (value == null || value.trim().isEmpty()) {
             throw new IllegalArgumentException("Password is required");
         }
-
-        if (!PASSWORD_PATTERN.matcher(value).matches()) {
-            throw new IllegalArgumentException(
-                    "Password must contain uppercase, lowercase, number and symbol"
-            );
-        }
-
-        value = normalize(value);
     }
 
     private static String normalize(String phone) {
