@@ -126,7 +126,7 @@ public class IamContextFacade {
      * @param userId el ID del usuario
      * @return el usuario, o null si no existe
      */
-    public User getUserById(Long userId) {
+    public User getUserById(String userId) {
         log.info("Facade: Obteniendo usuario por ID: {}", userId);
 
         try {
