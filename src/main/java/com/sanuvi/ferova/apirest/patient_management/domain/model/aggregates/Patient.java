@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *     Un paciente puede ser una madre o un niño asociado a una madre.
  * </p>
  *
- * @author Equipo de Desarrollo
  * @version 1.0
  */
 @Getter
