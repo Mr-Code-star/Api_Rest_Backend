@@ -2,6 +2,7 @@ package com.sanuvi.ferova.apirest.iam.infrastructure.hashing.bcrypt.services;
 
 import com.sanuvi.ferova.apirest.iam.infrastructure.hashing.bcrypt.BCryptHashingService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 /**
  * Implementación del servicio de hashing BCrypt
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  *     - Verificación de contraseñas con comparación resistente a timing attacks
  * </p>
  */
+@Service
 public class HashingServiceImpl implements BCryptHashingService {
 
     /**
