@@ -8,5 +8,5 @@ public record CreateStaffUserCommand(
         String email,
         String phone,
         String password,
-        Long roleId
+        String roleId
         ) { }

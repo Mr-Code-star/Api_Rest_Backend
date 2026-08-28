@@ -53,7 +53,7 @@ public class IamContextFacade {
      */
     public String  createStaffUser(String name, String lastName, String dni,
                                   String email, String phone, String password,
-                                  Long roleId) {
+                                  String roleId) {
 
         var createStaffuserCommand = new CreateStaffUserCommand(name, lastName, dni, email, phone, password, roleId);
         var results = userCommandService.handle(createStaffuserCommand);

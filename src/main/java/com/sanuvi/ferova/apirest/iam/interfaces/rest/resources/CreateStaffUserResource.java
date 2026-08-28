@@ -6,5 +6,5 @@ public record CreateStaffUserResource(String name,
                                       String email,
                                       String phone,
                                       String password,
-                                      Long roleId) {
+                                      String roleId) {
 }
